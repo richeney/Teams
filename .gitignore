@@ -1,0 +1,5 @@
+.vscode
+20??-*
+AzureArcForServers*.json
+AzureLandingZones*.json
+GenerateJson.ps1

@@ -1,0 +1,40 @@
+{
+  "Picture": "picture.png",
+  "DisplayName": "TeamName",
+  "Channels": [
+    {
+      "PartnerName": "partner",
+      "Guests": [
+        {
+          "Name": "First Last",
+          "Email": "first.last@domain.com"
+        },
+        {
+          "Name": "First Last",
+          "Email": "first.last@domain.com"
+        }
+      ]
+    },
+    {
+      "PartnerName": "partner",
+      "Guests": [
+        {
+          "Name": "First Last",
+          "Email": "first.last@domain.com"
+        },
+        {
+          "Name": "First Last",
+          "Email": "first.last@domain.com"
+        }
+      ]
+    }
+  ],
+  "Owners": [
+    "richeney@microsoft.com",
+    "lufussel@microsoft.com",
+    "gwood@microsoft.com",
+    "dawigg@microsoft.com",
+    "dasmall@microsoft.com"
+  ],
+  "GroupId": "464e830a-aa3a-4b4f-bcd5-f043264b7a36"
+}
