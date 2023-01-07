@@ -30,11 +30,18 @@
     }
   ],
   "Owners": [
-    "richeney@microsoft.com",
-    "lufussel@microsoft.com",
-    "gwood@microsoft.com",
-    "dawigg@microsoft.com",
-    "dasmall@microsoft.com"
+    {
+      "Upn": "richeney@microsoft.com",
+      "Name": "Richard Cheney"
+    },
+    {
+      "Upn": "lufussel@microsoft.com",
+      "Name": "Luke Fussell"
+    },
+    {
+      "Upn": "gwood@microsoft.com",
+      "Name": "George Wood"
+    }
   ],
   "GroupId": "464e830a-aa3a-4b4f-bcd5-f043264b7a36"
 }

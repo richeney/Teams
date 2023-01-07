@@ -1,4 +1,4 @@
-## CreatePartnerHackTeam.ps1
+## ConfigureTeam.ps1
 ##
 ## Creates a Microsoft Team suitable for a partner hack
 ## Note that a private Team must currently be pre-created.
@@ -7,12 +7,13 @@
 ##
 ## PowerShell v7
 ## Install-Module -Name MicrosoftTeams -Force -AllowClobber
-##
+## Import-Module MicrosoftTeams
+
 ## Example:
 ##
 ## 1. Create a valid JSON file
-## 2. Connect-MicrosoftTeams
-## 3. PartnerHackCreateTeam.ps1 AzureArcForServersJan2022.json
+## 2. Connect-MicrosoftTeams -TenantId 72f988bf-86f1-41af-91ab-2d7cd011db47
+## 3. .\ConfigureTeam.ps1 .\2023-01\AzureArcJan2023.json
 
 if ($Args.Length -ne 1) {
   Write-Host "Usage: $($PSCommandPath) filename.json"
@@ -81,8 +82,14 @@ foreach ($guest in $Json.Channels.Guests) {
     Write-Host "  $($guest.Email) ($($guest.Name)) ✔️"
   }
   else {
-    Write-Host "  $($guest.Email) ($($guest.Name)) - adding"
-    Add-TeamUser -GroupId $GroupId -User $guest.Email
+    try {
+      Add-TeamUser -GroupId $GroupId -User $guest.Email -ErrorAction SilentlyContinue
+     }
+     catch {
+      Write-Host "    $($guest.Email) ($($guest.Name)) ❌ (Manually add email, edit name)"
+      Continue
+    }
+    Write-Host "    $($guest.Email) ($($guest.Name)) ✔️ (added)"
   }
 }
 
@@ -114,11 +121,27 @@ foreach ($channel in $Json.Channels) {
   }
 
   foreach ($guest in $channel.Guests) {
-    if ($ExistingChannelGuests.Count -gt 0 -And $ExistingChannelGuests.User.ToLower() -contains $guest.Email) {
-      Write-Host "    $($guest.Email) ($($guest.Name)) ✔️"
+    $ExtEmail = "$($guest.Email.Replace('@', '_'))#EXT#@microsoft.onmicrosoft.com"
+
+    if ($ExistingGuests.User -NotContains $ExtEmail) {
+      Write-Host "    $($guest.Email) ($($guest.Name)) ❌ (Needs adding manually to the Team.)"
     } else {
-      Write-Host "    $($guest.Email) ($($guest.Name)) - adding"
-      Add-TeamChannelUser -GroupId $GroupId -DisplayName $channel.PartnerName -User $guest.Email
+      $UserId = ($ExistingGuests | Where-Object {$_.User -eq $ExtEmail}).UserId
+
+      if ($ExistingChannelGuests.Count -gt 0 -And $ExistingChannelGuests.UserId -Contains $UserId) {
+        Write-Host "    $($guest.Email) ($($guest.Name)) ✔️"
+      } else {
+        try {
+          Add-TeamChannelUser -GroupId $GroupId -DisplayName $channel.PartnerName -User $UserId -ErrorVariable err -ErrorAction SilentlyContinue
+        }
+        catch {
+          # Write-Host $_.Exception.Message -ForegroundColor Red
+          Write-Host "    $($guest.Email) ($($guest.Name)) ❌"
+          Continue
+        }
+        Write-Host "    $($guest.Email) ($($guest.Name)) ✔️ (added)"
+      }
     }
   }
+  # exit
 }
