@@ -86,10 +86,10 @@ foreach ($guest in $Json.Channels.Guests) {
       Add-TeamUser -GroupId $GroupId -User $guest.Email -ErrorAction SilentlyContinue
      }
      catch {
-      Write-Host "    $($guest.Email) ($($guest.Name)) ❌ (Manually add email, edit name)"
+      Write-Host "  $($guest.Email) ($($guest.Name)) ❌ (Manually add email, edit name)"
       Continue
     }
-    Write-Host "    $($guest.Email) ($($guest.Name)) ✔️ (added)"
+    Write-Host "  $($guest.Email) ($($guest.Name)) ✔️ (added)"
   }
 }
 
